@@ -23,7 +23,7 @@ app.use(cors({
 ],
 }));
 
-mongoose.connect("mongodb://localhost/bcrypt", {
+mongoose.connect("mongodb://localhost/messages-app", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -38,15 +38,22 @@ app.post('/register/', [
   check('password').not().isEmpty().trim().escape(),
 ], async (req, res) => {
   const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() })
-    }
-  let hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-  let newUser = await User.create({
-    email: req.body.email,
-    password: hashedPassword,
-  });
-  res.send(`${req.body.email} registered!`);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() })
+  }
+  const user = await User.findOne({ email: req.body.email });
+  if(user){
+    res.status(401).send({
+      message: "User already exists",
+    });
+  }else{
+    let hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+    let newUser = await User.create({
+      email: req.body.email,
+      password: hashedPassword,
+    });
+    res.status(200).send(`${req.body.email} registered!`);
+  }
 });
 
 app.post('/login/', [ 
