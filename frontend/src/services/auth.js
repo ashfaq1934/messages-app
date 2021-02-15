@@ -2,24 +2,31 @@ import decode from 'jwt-decode'
 import axios from 'axios'
 
 const AUTH_TOKEN_KEY = 'authToken'
+const USER_DETAILS = 'user'
 
 export function logoutUser() {
-    clearAuthToken()
+    axios.defaults.headers.common['Authorization'] = ''
+    localStorage.removeItem(AUTH_TOKEN_KEY)
+    localStorage.removeItem(USER_DETAILS)
 }
 
-export function setAuthToken(token) {
+export function setUserDetails(token, user) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     localStorage.setItem(AUTH_TOKEN_KEY, token)
+    localStorage.setItem(USER_DETAILS, user)
 }
 
 export function getAuthToken() {
     return localStorage.getItem(AUTH_TOKEN_KEY)    
 }
 
-export function clearAuthToken() {
-    axios.defaults.headers.common['Authorization'] = ''
-    localStorage.removeItem(AUTH_TOKEN_KEY)
+export function getUser(){
+    return localStorage.getItem(USER_DETAILS)
 }
+// export function clearAuthToken() {
+//     axios.defaults.headers.common['Authorization'] = ''
+//     localStorage.removeItem(AUTH_TOKEN_KEY)
+// }
 
 export function isLoggedIn() {
     let authToken = getAuthToken()

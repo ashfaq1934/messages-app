@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const User = require('./user');
+const Message = require('./message');
 const mongoose = require("mongoose");
 const { check, validationResult } = require('express-validator/');
 const jwt = require("jsonwebtoken");
@@ -85,6 +86,47 @@ app.post('/login/', [
         message: "User doesn't exist",
       });
     }
+});
+
+app.post('/messages/new/', [ 
+  check('user').isEmail().normalizeEmail(),
+  check('recipient').isEmail().normalizeEmail(),
+  check('title').not().isEmpty().trim().escape(),
+  check('message').not().isEmpty().trim().escape(),
+], async (req, res) => {
+  try {
+    const decoded = jwt.verify(req.headers.authorization, config.secret);
+    if(decoded){
+      let user = await User.findOne({ email: req.body.user });
+      if(user){
+        const message = await Message.create({
+          message: req.body.message,
+          title: req.body.title,
+          recipient: req.body.recipient,
+          user: user
+        });
+        res.status(200).send({
+          message: "New message created",
+        });
+      }
+    }
+  } catch(err) {
+    res.status(401).send({
+      message: "Token failed to verify"
+    });
+  }
+});
+app.post('/messages/', [ 
+  check('user').isEmail().normalizeEmail(),
+], async (req, res) =>{
+  const decoded = jwt.verify(req.headers.authorization, config.secret);
+  if(decoded){
+    let user = await User.findOne({ email: req.body.user });
+    if(user){
+      // let messages = await Message.find({})
+      console.log(user.id)
+    }
+  }
 });
 
 app.listen(7000, () => {

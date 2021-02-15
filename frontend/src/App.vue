@@ -1,4 +1,5 @@
 <template>
+<header>
   <div id="app">
     <div id="nav">
       <div class="left">
@@ -14,6 +15,7 @@
     </div>
     <router-view />
   </div>
+</header>
 </template>
 
 <script>

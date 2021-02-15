@@ -20,7 +20,7 @@
 
 <script>
     import axios from 'axios';
-    import { setAuthToken } from '../services/auth'
+    import { setUserDetails } from '../services/auth'
     
     export default {
         data(){
@@ -45,7 +45,7 @@
                     }
                 });
                 if(response.status == 200){
-                    setAuthToken(response.data.accessToken)
+                    setUserDetails(response.data.accessToken, response.data.email)
                     this.$router.push({ name: 'Home' });
                 }
 
