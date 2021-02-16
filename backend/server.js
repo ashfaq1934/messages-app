@@ -8,6 +8,7 @@ const { check, validationResult } = require('express-validator/');
 const jwt = require("jsonwebtoken");
 const config = require("./auth.config");
 const cors = require('cors');
+const uuid = require('uuid');
 
 
 
@@ -61,6 +62,10 @@ app.post('/login/', [
   check('email').isEmail().normalizeEmail(),
   check('password').not().isEmpty().trim().escape(),
 ], async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() })
+  }
   const user = await User.findOne({ email: req.body.email });
     if (user) {
       const hashCompare = await bcrypt.compare(req.body.password, user.password);
@@ -94,12 +99,18 @@ app.post('/messages/new/', [
   check('title').not().isEmpty().trim().escape(),
   check('message').not().isEmpty().trim().escape(),
 ], async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() })
+  }
   try {
     const decoded = jwt.verify(req.headers.authorization, config.secret);
     if(decoded){
       let user = await User.findOne({ email: req.body.user });
       if(user){
+        let newuuid = uuid.v4();
         const message = await Message.create({
+          uuid: newuuid,
           message: req.body.message,
           title: req.body.title,
           recipient: req.body.recipient,
@@ -107,6 +118,7 @@ app.post('/messages/new/', [
         });
         res.status(200).send({
           message: "New message created",
+          uuid: message.uuid
         });
       }
     }
@@ -116,16 +128,73 @@ app.post('/messages/new/', [
     });
   }
 });
+
 app.post('/messages/', [ 
   check('user').isEmail().normalizeEmail(),
-], async (req, res) =>{
+], async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() })
+  }
   const decoded = jwt.verify(req.headers.authorization, config.secret);
   if(decoded){
-    let user = await User.findOne({ email: req.body.user });
-    if(user){
-      // let messages = await Message.find({})
-      console.log(user.id)
+    let messagesList = []
+    let messages = await Message.find({recipient: req.body.user})
+    for (let message of messages){
+      let sender = await User.findOne(message.user)
+      messagesList.push({
+        uuid: message.uuid,
+        title: message.title,
+        recipient: message.recipient,
+        sender: sender.email,
+        message: message.message
+      });
     }
+      res.status(200).send({
+        messages: messagesList,
+    });
+  }
+});
+
+app.post('/recipients/', [ 
+  check('recipient').isEmail().normalizeEmail(),
+], async (req,res) =>{
+  // const errors = validationResult(req)
+  // if (!errors.isEmpty()) {
+  //   return res.status(422).json({ errors: errors.array() })
+  // }
+  let recipients = []
+  const decoded = jwt.verify(req.headers.authorization, config.secret);
+  if(decoded){
+    let users = await User.find();
+    users.forEach( user =>{
+      recipients.push({
+        recipient: user.email
+      });
+    });
+    res.status(200).send({
+      recipients: recipients
+    })
+  }
+});
+
+app.post('/messages/:uuid', [
+  check('uuid').not().isEmpty().trim().escape(),
+], async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() })
+  }
+  const decoded = jwt.verify(req.headers.authorization, config.secret);
+  if (decoded){
+    let message = await Message.findOne({uuid: req.body.uuid})
+    let sender = await User.findOne(message.user)
+    res.status(200).send({
+      title: message.title,
+      recipient: message.recipient,
+      sender: sender.email,
+      message: message.message
+    });
   }
 });
 

@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import CreateMessage from "../views/CreateMessage.vue";
+import ViewMessage from "../views/ViewMessage.vue";
 import { isLoggedIn, logoutUser } from '../services/auth'
 
 Vue.use(VueRouter);
@@ -34,7 +35,7 @@ const routes = [
     component: Register
   },
   {
-    path: "/create-message",
+    path: "/create",
     beforeEnter: (to, from, next) => {
       if(isLoggedIn()){
         next();
@@ -44,6 +45,11 @@ const routes = [
     },
     name: "CreateMessage",
     component: CreateMessage
+  },
+  {
+    path: "/view/:uuid",
+    name: "ViewMessage",
+    component: ViewMessage
   },
   {
     path: "/about",

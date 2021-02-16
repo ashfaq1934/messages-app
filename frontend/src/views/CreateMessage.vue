@@ -4,9 +4,9 @@
         <form action="" method="POST" @submit.prevent="handleSubmit">
             <div class="form-row">
                 <label for="recipient">Recipient</label>
+                
                 <select name="recipient" id="recipient" v-model="recipient">
-                    <option value="Person">Person</option>
-                    <option value="Another Person">Another Person</option>
+                    <option v-for="recipientOption in recipientsList" v-bind:key="recipientOption.recipient" :value="recipientOption.recipient">{{ recipientOption.recipient }}</option>
                 </select>
             </div>
             <div class="form-row">
@@ -26,7 +26,7 @@
 
 <script>
 import Messages from "@/components/Messages.vue";
-import { getUser, getAuthToken } from '../services/auth'
+import { getUser, getAuthToken } from '../services/auth';
 import axios from 'axios';
 
 export default {
@@ -37,7 +37,8 @@ export default {
       return {
           recipient: "",
           title: "",
-          message: ""
+          message: "",
+          recipientsList: [],
       }
   },
   methods: {
@@ -58,8 +59,22 @@ export default {
                     Authorization: `${getAuthToken()}`
                 }
             });
-            console.log(response);
+            this.$router.push('/view/' + response.data.uuid);
+      },
+      async getRecipients(){
+          let response = await axios({
+              method: 'post',
+                url: 'http://localhost:7000/recipients/',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `${getAuthToken()}`
+                }
+            });
+            this.recipientsList = response.data.recipients;
       }
+  },
+  mounted() {
+      this.getRecipients()
   },
 };
 </script>

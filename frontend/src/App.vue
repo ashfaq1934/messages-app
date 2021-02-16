@@ -1,10 +1,11 @@
 <template>
 <header>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
   <div id="app">
     <div id="nav">
       <div class="left">
       <span class="site-name">MessageApp</span>
-      <span class="create-message"><router-link to="/create-message">New Message</router-link></span>
+      <span class="create-message"><router-link to="/create">New Message</router-link></span>
       </div>
       <ul>
         <li><router-link to="/">Home</router-link></li>
