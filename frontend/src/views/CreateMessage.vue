@@ -18,6 +18,8 @@
                 <textarea type="text" name="message" id="message" v-model="message"></textarea>
             </div>
             <button type="submit">Submit</button>
+            <button type="button" v-on:click="encrypt()">Encrypt</button>
+            <button type="button" v-on:click="decrypt()">Decrypt</button>
         </form>
     </div>
     <Messages />
@@ -28,6 +30,7 @@
 import Messages from "@/components/Messages.vue";
 import { getUser, getAuthToken } from '../services/auth';
 import axios from 'axios';
+import { encode, decode } from '@reverse/encoder';
 
 export default {
   components: {
@@ -61,7 +64,7 @@ export default {
             });
             this.$router.push('/view/' + response.data.uuid);
       },
-      async getRecipients(){
+        async getRecipients(){
           let response = await axios({
               method: 'post',
                 url: 'http://localhost:7000/recipients/',
@@ -71,7 +74,15 @@ export default {
                 }
             });
             this.recipientsList = response.data.recipients;
-      }
+        },
+        encrypt() {
+            let text = encode(this.message);
+            this.message = text;
+        },
+        decrypt() {
+            let text = decode(this.message);
+            this.message = text;
+        }
   },
   mounted() {
       this.getRecipients()

@@ -5,7 +5,7 @@
         <div class="container">
             <div class="row">
                 <label for="sender">From</label>
-                <input type="text" name="title" id="title" v-model="sender" readonly>
+                <input type="text" name="sender" id="sender" v-model="sender" readonly>
             </div>
             <div class="row">
                 <label for="title">Title</label>
@@ -15,7 +15,8 @@
                 <label for="message">Message</label>
                 <textarea type="text" name="message" id="message" v-model="message" readonly></textarea>
             </div>
-            <button type="submit">Encrypt</button>
+            <button type="button" v-on:click="encrypt()">Encrypt</button>
+            <button type="button" v-on:click="decrypt()">Decrypt</button>
         </div>
     </div>
     <Messages />
@@ -26,6 +27,7 @@
 import Messages from "@/components/Messages.vue";
 import { getAuthToken } from '../services/auth';
 import axios from 'axios';
+import { encode, decode } from '@reverse/encoder';
 
     export default {
         components: {
@@ -53,6 +55,14 @@ import axios from 'axios';
                 this.sender = response.data.sender;
                 this.title = response.data.title;
                 this.message = response.data.message;
+            },
+            encrypt() {
+                let text = encode(this.message);
+                this.message = text;
+            },
+            decrypt() {
+                let text = decode(this.message);
+                this.message = text;
             }
         },
         mounted() {
@@ -82,7 +92,7 @@ import axios from 'axios';
     display: flex;
     padding: 10px;
 }
-#recipient{
+#sender{
     width: 40%;
     padding: 0.5%;
 }
