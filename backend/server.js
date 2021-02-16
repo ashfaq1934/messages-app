@@ -6,9 +6,9 @@ const Message = require('./message');
 const mongoose = require("mongoose");
 const { check, validationResult } = require('express-validator/');
 const jwt = require("jsonwebtoken");
-const config = require("./auth.config");
 const cors = require('cors');
 const uuid = require('uuid');
+require('dotenv').config()
 
 
 
@@ -29,7 +29,6 @@ mongoose.connect("mongodb://localhost/messages-app", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 app.get('/', function(req, res){
   res.send('welcome');
@@ -71,7 +70,7 @@ app.post('/login/', [
       const hashCompare = await bcrypt.compare(req.body.password, user.password);
       if (hashCompare) {
         //   ..... further code to maintain authentication like jwt or sessions
-        let token = jwt.sign({ id: user.id }, config.secret, {
+        let token = jwt.sign({ id: user.id }, process.env.JWT_KEY, {
           expiresIn: 86400 // 24 hours
         });
         res.status(200).send({
@@ -104,7 +103,7 @@ app.post('/messages/new/', [
     return res.status(422).json({ errors: errors.array() })
   }
   try {
-    const decoded = jwt.verify(req.headers.authorization, config.secret);
+    const decoded = jwt.verify(req.headers.authorization, process.env.JWT_KEY);
     if(decoded){
       let user = await User.findOne({ email: req.body.user });
       if(user){
@@ -136,7 +135,7 @@ app.post('/messages/', [
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() })
   }
-  const decoded = jwt.verify(req.headers.authorization, config.secret);
+  const decoded = jwt.verify(req.headers.authorization, process.env.JWT_KEY);
   if(decoded){
     let messagesList = []
     let messages = await Message.find({recipient: req.body.user})
@@ -164,7 +163,7 @@ app.post('/recipients/', [
   //   return res.status(422).json({ errors: errors.array() })
   // }
   let recipients = []
-  const decoded = jwt.verify(req.headers.authorization, config.secret);
+  const decoded = jwt.verify(req.headers.authorization, process.env.JWT_KEY);
   if(decoded){
     let users = await User.find();
     users.forEach( user =>{
@@ -185,7 +184,7 @@ app.post('/messages/:uuid', [
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() })
   }
-  const decoded = jwt.verify(req.headers.authorization, config.secret);
+  const decoded = jwt.verify(req.headers.authorization, process.env.JWT_KEY);
   if (decoded){
     let message = await Message.findOne({uuid: req.body.uuid})
     let sender = await User.findOne(message.user)
