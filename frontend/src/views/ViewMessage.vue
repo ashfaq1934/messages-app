@@ -1,6 +1,5 @@
 <template>
 <div class="section">
-    <!-- <article>{{ this.$route.params.uuid }}</article> -->
     <div class="outer">
         <div class="container">
             <div class="row">
@@ -80,10 +79,16 @@ import { encode, decode } from '@reverse/encoder';
 }
 .container{
     margin-left: 10%;
+    margin-top: 2%;
 }
 
 .container button{
     float: left;
+    color: whitesmoke;
+    padding: 0.5%;
+    margin-right: 1%;
+    background-color: #299464;
+    margin-top: 1%;
 }
 .row{
     margin-bottom: 1%;
