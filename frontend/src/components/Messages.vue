@@ -1,7 +1,7 @@
 <template>
 <aside class="message" :class="accordionClasses">
     <div class="message-header" @click="toggleAccordion">
-        Hello World        
+      <span>Messages</span>      
     </div>
     <div class="message-body">
         <ul v-if="messages.length" class="message-content">
@@ -18,7 +18,7 @@ import { getUser, getAuthToken } from '../services/auth';
 export default {
   data() {
     return {
-      isOpen: false,
+      isOpen: true,
       messages: [],
     }
   },
@@ -65,21 +65,42 @@ aside{
   color: whitesmoke;
 }
 .message {
-  max-width: 500px;
+  max-width: 15%;
   margin-left: auto;
   margin-right: auto;
 }
 .message-header {
   cursor: pointer;
-  background-color: teal;
+  padding: 5%;
+  color: whitesmoke;
+  background-color: #df8109;
+  border: 1px solid black;
 }
 .message-body   {
-  background-color: thistle;
+  background-color: #1f252b;
   overflow: hidden;
   transition: 0.3s ease all;
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+}
+.message-content{
+  margin: 0;
+  list-style: none;
+}
+.message-body > ul{
+  padding: 0;
 }
 .message-content li{
-  padding: 5%;
+  padding: 6%;
+  width: 100%;
+  border-bottom: 1px solid black;
+}
+.message-content li a{
+  color: whitesmoke !important;
+  text-decoration: none;
+}
+.message-content li:last-child{
+  border-bottom: none;
 }
 .is-closed .message-body {
   max-height: 0;

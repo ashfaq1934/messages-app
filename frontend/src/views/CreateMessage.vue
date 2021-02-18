@@ -96,12 +96,18 @@ export default {
 }
 .form-container{
     flex-grow: 3;
+    margin-top: 2%;
 }
 form{
     margin-left: 10%;
 }
 form button{
     float: left;
+    color: whitesmoke;
+    padding: 0.5%;
+    margin-right: 1%;
+    background-color: #299464;
+    margin-top: 1%;
 }
 .form-row{
     margin-bottom: 1%;

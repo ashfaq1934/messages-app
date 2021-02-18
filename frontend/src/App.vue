@@ -1,26 +1,27 @@
 <template>
-<header>
+<div>
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
   <div id="app">
-    <div id="nav">
-      <div class="left">
-      <span class="site-name">MessageApp</span>
-      <span class="create-message"><router-link to="/create">New Message</router-link></span>
+    <header>
+      <div id="nav">
+        <div class="left">
+        <span class="site-name">MessageApp</span>
+        <span class="create-message"><router-link to="/create">New Message</router-link></span>
+        </div>
+        <ul>
+          <li><router-link to="/">Home</router-link></li>
+          <li v-if="isLoggedIn()"><router-link to="/logout">Logout</router-link></li>
+          <li v-else><router-link to="/login">Login</router-link></li>
+        </ul>
       </div>
-      <ul>
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/about">About</router-link></li>
-        <li v-if="isLoggedIn()"><router-link to="/logout">Logout</router-link></li>
-        <li v-else><router-link to="/login">Login</router-link></li>
-      </ul>
-    </div>
+    </header>
     <router-view />
   </div>
-</header>
+</div>
 </template>
 
 <script>
-import { isLoggedIn } from './services/auth'
+import { isLoggedIn } from './services/auth';
 
 export default {
   methods: {
@@ -47,13 +48,13 @@ body{
 }
 .create-message{
   align-self: center;
-  background-color: #369c6e;
+  background-color: #df8109;
   padding: 1%;
   border-radius: 500px;
   font-weight: bold;
 }
 #app {
-  background-color: #404040;
+  background-color: #1f252b;
   display: flex;
   min-height: 100vh;
   flex-direction: column;
@@ -66,6 +67,11 @@ body{
 
 #app a{
   color: #42b983;
+}
+
+#app header{
+  background-color: rgba(25, 27, 31, 0.8);
+  border-bottom: 1px solid whitesmoke;
 }
 
 #nav {
@@ -92,12 +98,17 @@ body{
   list-style-type: none;
 }
 
+#nav > ul > li> a{
+  padding: 10%;
+}
+
 .account{
   align-self: center;
   flex-grow: 2;
 }
 
 #nav ul a.router-link-exact-active {
-  color: #42b983;
+  color: #df8109;
+  border-bottom: 5px solid #df8109;
 }
 </style>

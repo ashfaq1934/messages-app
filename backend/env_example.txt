@@ -1,0 +1,1 @@
+JWT_KEY=d9bffecc-d1f2-4656-9535

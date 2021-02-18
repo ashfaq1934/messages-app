@@ -34,7 +34,7 @@ import axios from 'axios';
                     password: this.password
                 };
                 JSON.stringify(data);
-                let response = await axios({
+                await axios({
                     method: 'post',
                     url: 'http://localhost:7000/register/',
                     data: data,
@@ -42,7 +42,7 @@ import axios from 'axios';
                         'Content-Type': 'application/json',
                     }
                 });
-                console.log(response.data);
+                this.$router.push({ name: 'Login' });
             }
         },
     }
@@ -64,7 +64,7 @@ form {
     padding: 3%;
     float: left;
     margin-bottom: 2%;
-    background-color: #008CBA;
+    background-color: #299464;
     border-radius: 3px;
     color: whitesmoke;
 }
