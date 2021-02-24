@@ -69,7 +69,6 @@ app.post('/login/', [
     if (user) {
       const hashCompare = await bcrypt.compare(req.body.password, user.password);
       if (hashCompare) {
-        //   ..... further code to maintain authentication like jwt or sessions
         let token = jwt.sign({ id: user.id }, process.env.JWT_KEY, {
           expiresIn: 86400 // 24 hours
         });
@@ -158,10 +157,6 @@ app.post('/messages/', [
 app.post('/recipients/', [ 
   check('recipient').isEmail().normalizeEmail(),
 ], async (req,res) =>{
-  // const errors = validationResult(req)
-  // if (!errors.isEmpty()) {
-  //   return res.status(422).json({ errors: errors.array() })
-  // }
   let recipients = []
   const decoded = jwt.verify(req.headers.authorization, process.env.JWT_KEY);
   if(decoded){

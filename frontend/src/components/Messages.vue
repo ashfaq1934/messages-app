@@ -65,7 +65,6 @@ aside{
   color: whitesmoke;
 }
 .message {
-  max-width: 15%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -107,5 +106,35 @@ aside{
 }
 .message-content {
   padding: 20px;
+}
+@media only screen and (max-width: 1420px){
+  aside{
+    flex: 2;
+  }
+}
+@media only screen and (max-width: 1420px){
+  aside{
+    flex: 2;
+  }
+}
+@media only screen and (max-width: 930px){
+  aside{
+    flex: 3;
+  }
+}
+@media only screen and (max-width: 930px){
+  aside{
+    flex: 4;
+  }
+}
+@media only screen and (max-width: 630px){
+  aside{
+    flex: 6;
+  }
+}
+@media only screen and (max-width: 510px){
+  aside{
+    flex: 10;
+  }
 }
 </style>

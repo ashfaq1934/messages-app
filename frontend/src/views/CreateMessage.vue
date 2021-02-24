@@ -95,7 +95,7 @@ export default {
     display: flex;
 }
 .form-container{
-    flex-grow: 3;
+    flex-grow: 6;
     margin-top: 2%;
 }
 form{
